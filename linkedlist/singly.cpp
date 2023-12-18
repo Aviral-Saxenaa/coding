@@ -88,8 +88,7 @@ void InsertatPos(int pos, Node *&head, int d, Node *&tail)
         newnode->next = temp->next;
         temp->next = newnode;
 }
-
-void del_start(Node *&head)
+void del_start(Node *&head, Node *&tail)
 {
         Node *temp = head;
         if (head == 0)
@@ -98,76 +97,48 @@ void del_start(Node *&head)
         }
         else if (temp == head)
         {
-                head = 0;
+                head = head->next;
+                if (!head) // If the list is now empty, update tail
+                        tail = 0;
                 delete temp;
         }
         else
         {
                 head = head->next;
-
                 delete temp;
         }
-        return;
 }
 
 void DelatEnd(Node *&head, Node *&tail)
 {
-        Node *temp = head;
-        
-        if (head == 0)
-        {
-                cout << "empty";
-        }
-        else if (temp == head)
-        {
-                head = 0;
-                tail = 0;
-                delete temp;
-        }
+    Node *temp = head;
 
-        else
+    if (head == 0)
+    {
+        cout << "empty";
+    }
+    else if (temp == head)
+    {
+        head = 0;
+        tail = 0;
+        delete temp;
+    }
+    else
+    {
+        Node *prevnode = 0;
+        while (temp != 0)
         {
-                Node*prevnode=0;
-                while (temp->next != 0)
-                {
-                        prevnode = temp;
-                        temp = temp->next;
-                }
-                tail = prevnode;
-                prevnode->next = 0;
-                delete temp;
+            prevnode = temp;
+            temp = temp->next;
         }
-        return;
+        tail = prevnode;
+
+        prevnode->next = 0;
+        delete temp;
+    }
 }
 
-void del_at_pos(int pos, Node *&head, Node *tail)
-{
-        Node *temp = head;
-        int i = 1;
-        if (pos == 1)
-        {
-                del_start(head);
-        }
-        else if (pos == total_length(head))
-        {
-                DelatEnd(head, tail);
-        }
-        else
-        {
-                Node*prevnode=0;
-                while (i < pos)
-                {
-                        prevnode = temp;
-                        temp = temp->next;
-                        i++;
-                }
-                prevnode->next = temp->next;
-                temp->next = 0;
 
-                delete temp;
-        }
-        
-}
 
 int main()
 {
@@ -180,6 +151,8 @@ int main()
         print(head);
         cout << endl;
         cout << "total length is " << total_length(head) << endl;
-        del_at_pos(2,head,tail);
+        // del_start(head,tail);
+        DelatEnd(head, tail);
+        // del_at_pos(2, head, tail);
         print(head);
 }
